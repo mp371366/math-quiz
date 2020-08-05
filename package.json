@@ -1,0 +1,13 @@
+{
+  "name": "math-quiz",
+  "version": "1.0.0",
+  "description": "Math quiz app",
+  "main": "index.html",
+  "scripts": {
+    "build": "tsc --sourceMap index.ts",
+    "lint": "tslint index.ts"
+  },
+  "keywords": [],
+  "author": "mp371366",
+  "license": "MIT"
+}

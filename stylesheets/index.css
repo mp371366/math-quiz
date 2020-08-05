@@ -1,0 +1,40 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: space-between;
+  width: 100vw;
+  margin: 0;
+  text-align: center;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  color: #8E9093;
+  background-color: #18191A;
+}
+
+header {
+  font-size: 40px;
+}
+
+header, footer {
+  padding: 8px;
+  background-color: #242526;
+}
+
+main>h2 {
+  font-size: 30px;
+  margin-bottom: 30px;
+}
+
+.button {
+  height: 50px;
+  padding: 5px 10px;
+  display: inline-flex;
+  border-radius: 5px;
+  align-items: center;
+}
+
+.button:hover {
+  cursor: pointer;
+  background-color: #3B3C3C;
+}
