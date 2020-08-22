@@ -1,0 +1,16 @@
+table {
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid #8E9093;
+  padding: 8px;
+}
+
+.correct {
+  background-color: #002F00;
+}
+
+.incorrect {
+  background-color: #2F0000;
+}

@@ -1,0 +1,19 @@
+.button {
+  height: 50px;
+  padding: 5px 10px;
+  display: inline-flex;
+  border-radius: 5px;
+  align-items: center;
+  border: 1px solid;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.button.button-disabled {
+  opacity: 0.5;
+}
+
+.button:not(.button-disabled):hover {
+  cursor: pointer;
+  background-color: #3B3C3C;
+}

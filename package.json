@@ -4,10 +4,13 @@
   "description": "Math quiz app",
   "main": "index.html",
   "scripts": {
-    "build": "tsc --sourceMap index.ts",
-    "lint": "tslint index.ts"
+    "build": "mkdir -p build && cp -r *.html stylesheets scripts build/ && tsc --build tsconfig.json",
+    "lint": "tslint **/*.ts",
+    "clean": "rm -rf build",
+    "deploy": "scp -r build/ me-at-students:~/public_html/math-quiz/"
   },
   "keywords": [],
   "author": "mp371366",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {}
 }

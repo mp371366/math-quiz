@@ -1,0 +1,29 @@
+.modal {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0px;
+  top: 0px;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-disabled {
+  visibility: hidden;
+}
+
+.modal-section {
+  background-color: #242526;
+  width: 50vw;
+  height: 20vh;
+  margin: 40vh auto;
+  border: 2px black solid;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.modal-section>h3 {
+  font-size: 22px;
+  padding-top: 20px;
+}

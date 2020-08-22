@@ -1,0 +1,51 @@
+.form {
+  width: min(500px, 60%);
+}
+
+input[type=number] {
+  width: 80px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: #18191A;
+  border: 1px solid;
+  color: inherit;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+input:focus {
+  outline: none;
+}
+
+input[type="number"] {
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+dl.time-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+dl.time-list>dt,
+dl.time-list>dd {
+  margin: 0;
+  width: 50%;
+}
+
+dl.time-list>dt {
+  text-align: left;
+}
+
+dl.time-list>dd {
+  text-align: right;
+}

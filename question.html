@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Math quiz</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href='stylesheets/reset.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href='stylesheets/global.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href='stylesheets/button.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href='stylesheets/modal.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href='stylesheets/question.css'>
+  <script type='module' src='scripts/question.js'></script>
+</head>
+
+<body>
+  <header>
+    <h1>Math quiz</h1>
+  </header>
+  <main id='main'>
+    <h2 id='header'>Question 1</h2>
+    <div class='form'>
+      <p id='intro'>Intro :)</p>
+      <label id='label' for='answer'>2 + 2 = </label>
+      <input type='number' step='1' name='answer' id='answer' required />
+      <dl class='time-list'>
+        <dt>Time</dt>
+        <dd id='time'>0:00.0</dd>
+        <dt>Penalty</dt>
+        <dd id='penalty'>0s</dd>
+      </dl>
+    </div>
+    <div id='buttons'>
+      <div id='prev' class='button'>Previous question</div>
+      <div id='abort' class='button'>Abort quiz</div>
+      <div id='finish' class='button'>Finish quiz</div>
+      <div id='next' class='button'>Next question</div>
+    </div>
+    <div id='modal' class='modal modal-disabled'>
+      <section class='modal-section'>
+        <h3 id='modal-header'>Are you sure?</h3>
+        <div>
+          <div id='confirm' class='button'>Yes</div>
+          <div id='cancel' class='button'>No</div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer>
+    &copy Mateusz Pyszczek 2020
+  </footer>
+</body>
+
+</html>

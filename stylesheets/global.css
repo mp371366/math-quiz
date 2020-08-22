@@ -21,20 +21,16 @@ header, footer {
   background-color: #242526;
 }
 
+main {
+  padding: 5% 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 10;
+}
+
 main>h2 {
   font-size: 30px;
   margin-bottom: 30px;
-}
-
-.button {
-  height: 50px;
-  padding: 5px 10px;
-  display: inline-flex;
-  border-radius: 5px;
-  align-items: center;
-}
-
-.button:hover {
-  cursor: pointer;
-  background-color: #3B3C3C;
 }
