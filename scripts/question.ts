@@ -2,7 +2,7 @@ import { idSelector, isQuiz, ticksToTime, makeErrorInfo, actionWith, makeActiveI
 
 (() => {
   const quiz = JSON.parse(`{
-    "intro": "TODO",
+    "intro": "Good luck!",
     "questions": [
       {
         "question": "2 + 2",
