@@ -1,10 +1,31 @@
-table {
+ul {
+  list-style: none;
+  padding: 0;
   border-collapse: collapse;
 }
 
-table, th, td {
+li {
   border: 1px solid #8E9093;
   padding: 8px;
+}
+
+dl {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+dl>dt, dl>dd {
+  margin: 0;
+  width: 50%;
+}
+
+dl>dt {
+  text-align: left;
+}
+
+dl>dd {
+  text-align: right;
 }
 
 .correct {
@@ -13,4 +34,20 @@ table, th, td {
 
 .incorrect {
   background-color: #2F0000;
+}
+
+@media screen and (max-width: 760px) {
+  li {
+    padding: 4px;
+  }
+  
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+  }
+
+  .buttons>.button {
+    margin: 2px;
+  }
 }

@@ -49,3 +49,37 @@ dl.time-list>dt {
 dl.time-list>dd {
   text-align: right;
 }
+
+@media screen and (max-width: 760px) {
+  .form {
+    width: min(500px, 100%);
+  }
+
+  #buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .button {
+    width: min(200px, 45%);
+    margin: 5px;
+    box-sizing: border-box;
+  }
+
+  #prev {
+    order: 1;
+  }
+
+  #next {
+    order: 2;
+  }
+
+  #abort {
+    order: 3
+  }
+
+  #finish {
+    order: 4;
+  }
+}

@@ -14,8 +14,9 @@
 .modal-section {
   background-color: #242526;
   width: 50vw;
-  height: 20vh;
-  margin: 40vh auto;
+  height: 200px;
+  margin: auto;
+  margin-top: calc(50vh - 100px);
   border: 2px black solid;
   padding: 10px;
   display: flex;
@@ -26,4 +27,14 @@
 .modal-section>h3 {
   font-size: 22px;
   padding-top: 20px;
+}
+
+@media screen and (max-width: 760px) {
+  .modal-section {
+    width: 90vw;
+  }
+
+  .modal-section>h3 {
+    padding-top: 10px;
+  }
 }

@@ -34,3 +34,13 @@ main>h2 {
   font-size: 30px;
   margin-bottom: 30px;
 }
+
+@media screen and (max-width: 760px) {
+  main {
+    padding: 5%;
+  }
+  
+  main>h2 {
+    margin-bottom: 5px;
+  }
+}

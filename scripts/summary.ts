@@ -11,24 +11,32 @@ import { idSelector, makeErrorInfo, isAnswers, ticksToTime } from './utils.js';
 
   const resultsElement = idSelector('results');
   resultsElement.append(...Object.values(answers).map((answer, idx) => {
-    const row = document.createElement('tr');
-    const createCell = (innerText: string | number | undefined): HTMLTableCellElement => {
-      const cell = document.createElement('td') as HTMLTableCellElement;
-      cell.innerText = innerText?.toString() ?? 'N/A';
-      return cell;
+    const row = document.createElement('dl');
+    const create = (as: string) => (innerText: string | number | undefined): HTMLElement => {
+      const element = document.createElement(as);
+      element.innerText = innerText?.toString() ?? 'N/A';
+      return element;
     };
+    const createDD = create('dd');
+    const createDT = create('dt');
     const isGoodAnswer = answer.answer === answer.currentAnswer;
     const penalty = 1000 * (isGoodAnswer ? 0 : answer.penalty);
     row.append(
-      createCell(`${idx + 1}.`),
-      createCell(answer.question),
-      createCell(answer.answer),
-      createCell(answer.currentAnswer),
-      createCell(isGoodAnswer ? 'Ok' : 'Bad'),
-      createCell(ticksToTime(answer.time + penalty))
+      createDT('No'),
+      createDD(`${idx + 1}.`),
+      createDT('Expression'),
+      createDD(answer.question),
+      createDT('Answer'),
+      createDD(answer.answer),
+      createDT('Your answer'),
+      createDD(answer.currentAnswer),
+      createDT('Time'),
+      createDD(ticksToTime(answer.time + penalty))
     );
-    row.classList.add(isGoodAnswer ? 'correct' : 'incorrect');
-    return row;
+    const result = document.createElement('li');
+    result.append(row);
+    result.classList.add(isGoodAnswer ? 'correct' : 'incorrect');
+    return result;
   }));
 
 
