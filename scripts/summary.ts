@@ -47,7 +47,7 @@ import { idSelector, makeErrorInfo, isAnswers, ticksToTime } from './utils.js';
   overallElement.innerText = `Your result is ${ticksToTime(resultTicks)}.`;
 
   function moveBack() {
-    window.location.href = 'index.html';
+    window.location.href = '/';
   }
 
   function makeSave<T>(data: T) {

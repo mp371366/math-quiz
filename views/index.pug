@@ -1,0 +1,19 @@
+extends base.pug
+block styles
+
+block scripts
+
+block content
+  h2 Hello at math quiz!!
+  p 
+    |The quiz contains few math questions in form of some math expressions.
+    | You are going to be asked about evalate those expressions.
+    | When you start, the time which you spend on each task will be calculated.
+    | You can change the question if you want and go back to it later.
+    | When you answer on all questions, please submit the quiz.
+    | If the answer is not correct, the penalty will be added to the total amount of time,
+    | which you spend on the quiz.
+    | So your result is then sum of time spend on the quiz and all penalties (zero if all answers are correct).
+    | So please do the quiz as fast as you can and without mistakes. Good luck!
+  a(href='/question')
+    div.button Take a quiz!

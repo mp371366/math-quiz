@@ -1,0 +1,31 @@
+extends base.pug
+
+block styles
+  style: include /stylesheets/modal.css
+  style: include /stylesheets/question.css
+
+block scripts
+  script(src='/scripts/question.js' defer type='module')
+
+block content
+  h2#header Question 1
+  .form 
+    p#intro Good luck!
+    label#label(for='asnwer')
+    input#answer(type='number' step='1' name='answer' required)
+    dl.time-list
+      dt Time
+      dd#time 0:00.0
+      dt Penalty
+      dd#penalty 0s
+  #buttons
+    #prev.button Previous question
+    #abort.button Abort quiz
+    #finish.button Finish quiz
+    #next.button Next question
+  #modal.modal.modal-disabled
+    section.modal-section
+      h3#modal-header Are you sure?
+      div
+        #confirm.button Yes
+        #cancel.button No

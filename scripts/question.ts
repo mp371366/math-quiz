@@ -123,7 +123,7 @@ import { idSelector, isQuiz, ticksToTime, makeErrorInfo, actionWith, makeActiveI
     }
 
     clearTimeout(timer);
-    window.location.href = `./${showModal === 'finish' ? 'summary' : 'index'}.html`;
+    window.location.href = showModal === 'finish' ? '/summary' : '/';
   }
 
   function isQuizFinished() {

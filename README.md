@@ -1,5 +1,9 @@
-# Building
+# Math quiz
+
+## Building
 
 run `npm run build` in a terminal to build the project
 
-start looking for the quiz in `/build/index.hmtl`
+## Start
+
+start server with `npm start` and go to http://localhost:3000
