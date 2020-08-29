@@ -1,0 +1,19 @@
+dl {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+dl>dt,
+dl>dd {
+  margin: 0;
+  width: 50%;
+}
+
+dl>dt {
+  text-align: left;
+}
+
+dl>dd {
+  text-align: right;
+}

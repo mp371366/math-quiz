@@ -1,0 +1,33 @@
+input[type=number] {
+  width: 80px;
+}
+
+@media screen and (max-width: 760px) {
+  #buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .button {
+    width: min(200px, 45%);
+    margin: 5px;
+    box-sizing: border-box;
+  }
+
+  #prev {
+    order: 1;
+  }
+
+  #next {
+    order: 2;
+  }
+
+  #abort {
+    order: 3
+  }
+
+  #finish {
+    order: 4;
+  }
+}

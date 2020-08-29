@@ -1,0 +1,56 @@
+.form {
+  width: min(500px, 60%);
+}
+
+.form-item {
+  padding: 10px 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  align-items: baseline;
+}
+
+.form-item>input {
+  width: 70%;
+}
+
+.form-item>label {
+  width: 25%;
+}
+
+input[type=number],
+input[type=text],
+input[type=password] {
+  height: 40px;
+  border-radius: 20px;
+  background-color: #18191A;
+  border: 1px solid;
+  color: inherit;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-size: inherit;
+  font-family: inherit;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input:focus {
+  outline: none;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button,
+input[type=text]::-webkit-inner-spin-button,
+input[type=text]::-webkit-outer-spin-button,
+input[type=password]::-webkit-inner-spin-button,
+input[type=password]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+@media screen and (max-width: 760px) {
+  .form {
+    width: min(500px, 100%);
+  }
+}

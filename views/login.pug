@@ -1,0 +1,22 @@
+extends base.pug
+
+block styles
+  link(rel='stylesheet' type='text/css' href='/stylesheets/form.css')
+  link(rel='stylesheet' type='text/css' href='/stylesheets/login.css')
+
+block scripts
+  script(src='/scripts/login.js' defer type='module')
+
+block content
+  form.form(action='/login' method='POST')
+    p#error= error
+    .form-item
+      label(for='username') Username
+      input(name='username' type='text' required)
+    .form-item
+      label(for='password') Password
+      input(name='password' type='password' required)
+    input(type='hidden' name='next' value=next)
+    input(type='hidden' name='_csrf' value=csrfToken)
+    input(type='submit' hidden)
+    #login-button.button Login

@@ -1,7 +1,4 @@
 extends base.pug
-block styles
-
-block scripts
 
 block content
   h2 Hello at math quiz!!
@@ -15,5 +12,7 @@ block content
     | which you spend on the quiz.
     | So your result is then sum of time spend on the quiz and all penalties (zero if all answers are correct).
     | So please do the quiz as fast as you can and without mistakes. Good luck!
-  a(href='/question')
-    div.button Take a quiz!
+  if username !== undefined
+    a(href='/quiz'): .button Take a quiz!
+  else
+    include /includes/login-button.pug

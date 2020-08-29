@@ -1,11 +1,13 @@
 extends base.pug
 
 block styles
-  style: include /stylesheets/modal.css
-  style: include /stylesheets/question.css
+  link(rel='stylesheet' type='text/css' href='/stylesheets/modal.css')
+  link(rel='stylesheet' type='text/css' href='/stylesheets/form.css')
+  link(rel='stylesheet' type='text/css' href='/stylesheets/description-list.css')
+  link(rel='stylesheet' type='text/css' href='/stylesheets/quiz.css')
 
 block scripts
-  script(src='/scripts/question.js' defer type='module')
+  script(src='/scripts/quiz.js' defer type='module')
 
 block content
   h2#header Question 1
