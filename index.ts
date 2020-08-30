@@ -9,16 +9,17 @@ config();
 
 const app = express();
 const port = process.env.PORT ?? 3000;
+const secret = process.env.SECRET ?? 'math-quiz';
 
 app.locals.basedir = __dirname;
 app.use('/scripts', express.static('build'));
 app.use('/stylesheets', express.static('stylesheets'));
 app.set('view engine', 'pug');
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser(secret));
 app.use(csrf({ cookie: true }));
 app.use(session({
-  secret: 'math-quiz',
+  secret,
   resave: false,
   saveUninitialized: true,
   cookie: {
