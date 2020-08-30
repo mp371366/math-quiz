@@ -2,6 +2,7 @@
 
 ## Minimal setup
 
+run `cp .env.example .env` and eventually set up variables
 run `npm run build && npm run createdb` to initalize codebase\
 then run `npm start` and go to http://localhost:300
 

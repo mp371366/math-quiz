@@ -3,9 +3,12 @@ import * as csrf from 'csurf';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
 import { login, changePassword } from './base/login';
+import { config } from 'dotenv';
+
+config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT ?? 3000;
 
 app.locals.basedir = __dirname;
 app.use('/scripts', express.static('build'));
