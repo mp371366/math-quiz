@@ -12,7 +12,7 @@ getQuiz(quizId).then((quiz) => {
     return;
   }
 
-  let showModal: 'abort' | 'finish' | null = null;
+  let showModal: 'finish' | null = null;
   let activeAnswer = 0;
   const answers: (Omit<Answer, 'answer'> & { answer: number | undefined })[] = questions.map((question) => ({
     ...question,
@@ -56,8 +56,6 @@ getQuiz(quizId).then((quiz) => {
   clickIfActive(nextElement, () => ++activeAnswer && setFocusOnInput());
   const finishElement = idSelector('finish');
   clickIfActive(finishElement, () => showModal = 'finish');
-  const abortElement = idSelector('abort');
-  clickIfActive(abortElement, () => showModal = 'abort');
 
   const modalElement = idSelector('modal');
   const modalHeaderElement = idSelector('modal-header');
@@ -76,11 +74,8 @@ getQuiz(quizId).then((quiz) => {
 
   const bodyElement = document.querySelector('body') as HTMLElement;
   bodyElement.onkeydown = action<KeyboardEvent>((ev) => {
-    const [ESC, ENTER] = [27, 13];
-    if (ev.keyCode === ESC) {
-      setFocusOnInput(showModal !== null);
-      showModal = showModal === null ? 'abort' : null;
-    } else if (ev.keyCode === ENTER) {
+    const [ENTER] = [13];
+    if (ev.keyCode === ENTER) {
       if (showModal === null) {
         showModal = isQuizFinished() ? 'finish' : null;
       } else {
