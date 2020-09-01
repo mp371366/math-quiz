@@ -1,7 +1,7 @@
 import { driver, until } from 'mocha-webdriver';
 import { login, BASE_URL } from './utils';
 import { expect } from 'chai';
-import { finishQuiz } from '../scripts/api/quiz';
+import { postData } from '../scripts/api/utils';
 
 describe('Quiz', () => {
   const id = 1;
@@ -13,7 +13,7 @@ describe('Quiz', () => {
       .catch(() => null);
   }
 
-  it('should not allow submit quiz second time', async function () {
+  it('should not allow submit quiz second time by webpage', async function () {
     this.timeout(20000);
     await login();
     await getQuiz();
@@ -29,8 +29,8 @@ describe('Quiz', () => {
       { id, time: 1, answer: 1 },
       { id, time: 1, answer: 1 },
     ];
-    expect(await finishQuiz(id, answers)
-      .then(() => false)
-      .catch(() => true)).to.be.true;
+    expect(await postData(`${BASE_URL}/api/quiz/${id}`, answers)
+      .then(({ status }) => status)
+      .catch(() => false)).to.be.false;
   });
 });

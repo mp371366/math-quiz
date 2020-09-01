@@ -1,5 +1,5 @@
-import { BASE_URL } from './settings';
-import { getData, postData } from './utils';
+import { BASE_URL } from './settings.js';
+import { getData, postData } from './utils.js';
 import { Quiz, Question, Answer } from '../types';
 
 const QUIZ_URL = `${BASE_URL}/quiz`;
