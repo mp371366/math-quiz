@@ -1,69 +1,100 @@
-import { idSelector, makeErrorInfo, isAnswers, ticksToTime } from './utils.js';
+import { FullAnswer, TopResult } from './types/summary';
+import { idSelector, makeErrorInfo, ticksToTime, actionWith, sum } from './utils.js';
+import { getSummary } from './api/index.js';
+import { getTop } from './api/summary.js';
 
-(() => {
-  const answers = JSON.parse(window.sessionStorage.getItem('answers') ?? '');
-  window.sessionStorage.removeItem('answers');
+let lastQuizId = undefined as number | undefined;
+const idElementContent = document?.querySelector('meta[name="quiz-id"]')?.getAttribute('content');
+let quizId = idElementContent ? parseInt(idElementContent, 10) : undefined;
+let summary: FullAnswer[] | void;
+let tops: TopResult[] | void;
 
-  if (!isAnswers(answers)) {
-    makeErrorInfo('There is no answers');
+function action<T = Event, U = any>(f: (ev: T) => U): (ev: T) => U {
+  return actionWith<T, U>(redraw)(f);
+}
+
+const create = (as: string) => (innerText: string | number | undefined): HTMLElement => {
+  const element = document.createElement(as);
+  element.innerText = innerText?.toString() ?? 'N/A';
+  return element;
+};
+
+const resultsContainer = idSelector('results-container');
+const resultsElement = idSelector('results');
+const overallElement = idSelector('overall');
+const topElement = idSelector('top');
+
+async function redraw() {
+  if (lastQuizId === quizId) {
     return;
   }
 
-  const resultsElement = idSelector('results');
-  resultsElement.append(...Object.values(answers).map((answer, idx) => {
-    const row = document.createElement('dl');
-    const create = (as: string) => (innerText: string | number | undefined): HTMLElement => {
-      const element = document.createElement(as);
-      element.innerText = innerText?.toString() ?? 'N/A';
-      return element;
-    };
-    const createDD = create('dd');
-    const createDT = create('dt');
-    const isGoodAnswer = answer.answer === answer.currentAnswer;
-    const penalty = 1000 * (isGoodAnswer ? 0 : answer.penalty);
-    row.append(
-      createDT('No'),
-      createDD(`${idx + 1}.`),
-      createDT('Expression'),
-      createDD(answer.question),
-      createDT('Answer'),
-      createDD(answer.answer),
-      createDT('Your answer'),
-      createDD(answer.currentAnswer),
-      createDT('Time'),
-      createDD(ticksToTime(answer.time + penalty))
-    );
-    const result = document.createElement('li');
-    result.append(row);
-    result.classList.add(isGoodAnswer ? 'correct' : 'incorrect');
-    return result;
-  }));
-
-
-  const overallElement = idSelector('overall');
-  const resultTicks = Object.values(answers).reduce((acc, { time, currentAnswer, answer, penalty }) => {
-    return acc + time + (currentAnswer === answer ? 0 : penalty * 1000);
-  }, 0);
-  overallElement.innerText = `Your result is ${ticksToTime(resultTicks)}.`;
-
-  function moveBack() {
-    window.location.href = '/';
+  if (lastQuizId !== undefined) {
+    const oldButton = document.querySelector(`.button[data-id="${lastQuizId}"]`);
+    oldButton?.classList.remove('active');
   }
 
-  function makeSave<T>(data: T) {
-    window.localStorage.setItem('save', JSON.stringify(data))
-  }
+  lastQuizId = quizId;
 
-  const onlyResultElement = idSelector('save-with-details');
-  onlyResultElement.onclick = () => {
-    makeSave(answers);
-    moveBack();
-  };
-  const withDetailsElement = idSelector('only-result');
-  withDetailsElement.onclick = () => {
-    makeSave(resultTicks);
-    moveBack();
-  };
-  const dontSaveElement = idSelector('no-save');
-  dontSaveElement.onclick = moveBack;
-})();
+  if (quizId !== undefined) {
+    const newButton = document.querySelector(`.button[data-id="${lastQuizId}"]`);
+    newButton?.classList.add('active');
+
+    summary = await getSummary(quizId).catch(makeErrorInfo);
+    if (!summary) {
+      return;
+    }
+    tops = await getTop(quizId).catch(makeErrorInfo);
+    if (!tops) {
+      return;
+    }
+
+    resultsElement.innerHTML = '';
+    resultsElement.append(...summary.map((answer, idx) => {
+      const row = document.createElement('dl');
+      const createDD = create('dd');
+      const createDT = create('dt');
+      const isGoodAnswer = answer.correctAnswer === answer.answer;
+      row.append(
+        createDT('No'),
+        createDD(`${idx + 1}.`),
+        createDT('Expression'),
+        createDD(answer.expression),
+        createDT('Answer'),
+        createDD(answer.correctAnswer),
+        createDT('Your answer'),
+        createDD(answer.answer),
+        createDT('Time'),
+        createDD(ticksToTime(answer.time))
+      );
+      const result = document.createElement('li');
+      result.append(row);
+      result.classList.add(isGoodAnswer ? 'correct' : 'incorrect');
+      return result;
+    }));
+
+    const resultTicks = sum(...summary.map(({ time }) => time));
+    overallElement.innerText = `Your result is ${ticksToTime(resultTicks)}.`;
+
+    topElement.innerHTML = '';
+    topElement.append(...tops.map((top) => {
+      const row = document.createElement('tr');
+      const createCell = create('td');
+      row.append(
+        createCell(top.username),
+        createCell(ticksToTime(top.time))
+      );
+      return row;
+    }));
+  } else {
+    resultsContainer.innerHTML = '';
+  }
+}
+
+document.querySelectorAll<HTMLElement>('.buttons>li>.button').forEach((button) => {
+  button.onclick = action(() => {
+    quizId = parseInt(button.dataset.id ?? '', 10);
+  });
+});
+
+redraw().catch(makeErrorInfo);

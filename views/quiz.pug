@@ -1,5 +1,9 @@
 extends base.pug
 
+block meta
+  meta(name='quiz-id' content=quizId)
+  meta(name='csrf-token' content=csrfToken)
+
 block styles
   link(rel='stylesheet' type='text/css' href='/stylesheets/modal.css')
   link(rel='stylesheet' type='text/css' href='/stylesheets/form.css')
@@ -10,6 +14,7 @@ block scripts
   script(src='/scripts/quiz.js' defer type='module')
 
 block content
+  .spinner
   h2#header Question 1
   .form 
     p#intro Good luck!

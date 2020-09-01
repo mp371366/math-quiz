@@ -1,5 +1,5 @@
 import { driver } from 'mocha-webdriver';
-import { User } from '../types';
+import { User } from '../scripts/types';
 
 const BASE_URL = 'http://localhost:3000';
 const LOGIN_URL = `${BASE_URL}/login`;

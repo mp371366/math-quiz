@@ -1,0 +1,15 @@
+{
+  "include": [
+    "index.ts",
+  ],
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "allowJs": false,
+    "composite": false,
+    "outDir": "server/",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

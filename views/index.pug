@@ -1,5 +1,8 @@
 extends base.pug
 
+block scripts
+  script(src='scripts/index.js' defer type='module')
+
 block content
   h2 Hello at math quiz!!
   p 
@@ -13,6 +16,6 @@ block content
     | So your result is then sum of time spend on the quiz and all penalties (zero if all answers are correct).
     | So please do the quiz as fast as you can and without mistakes. Good luck!
   if username !== undefined
-    a(href='/quiz'): .button Take a quiz!
+    ul#quizes
   else
     include /includes/login-button.pug

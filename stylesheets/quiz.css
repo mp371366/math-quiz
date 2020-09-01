@@ -2,31 +2,45 @@ input[type=number] {
   width: 80px;
 }
 
+main {
+  position: relative;
+}
+
+.spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: #18191A;
+}
+
+.spinner.spinner-invisible {
+  width: 0;
+  height: 0;
+}
+
 @media screen and (max-width: 760px) {
   #buttons {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
   }
-
   .button {
     width: min(200px, 45%);
     margin: 5px;
     box-sizing: border-box;
   }
-
   #prev {
     order: 1;
   }
-
   #next {
     order: 2;
   }
-
   #abort {
     order: 3
   }
-
   #finish {
     order: 4;
   }

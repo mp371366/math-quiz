@@ -1,39 +1,11 @@
-import { idSelector, isQuiz, ticksToTime, makeErrorInfo, actionWith, makeActiveIfWith, Answer } from './utils.js';
+import { idSelector, ticksToTime, makeErrorInfo, actionWith, makeActiveIfWith, sum } from './utils.js';
+import { getQuiz, finishQuiz } from './api';
+import { Answer } from './types';
 
-(() => {
-  const quiz = JSON.parse(`{
-    "intro": "Good luck!",
-    "questions": [
-      {
-        "question": "2 + 2",
-        "answer": 4,
-        "penalty": 1
-      },
-      {
-        "question": "2 - 2",
-        "answer": 0,
-        "penalty": 2
-      },
-      {
-        "question": "2 * 2",
-        "answer": 4,
-        "penalty": 3
-      },
-      {
-        "question": "2 / 2",
-        "answer": 1,
-        "penalty": 4
-      }
-    ]
-  }`);
-
-  if (!isQuiz(quiz)) {
-    makeErrorInfo('Data is in bad format.');
-    return;
-  }
-
+const quizId = parseInt(document?.querySelector('meta[name="quiz-id"]')?.getAttribute('content') ?? '', 10);
+getQuiz(quizId).then((quiz) => {
   const questions = quiz.questions;
-  const questionsNumber = Object.keys(questions).length;
+  const questionsNumber = questions.length;
 
   if (questionsNumber === 0) {
     makeErrorInfo('There is no questions.');
@@ -42,9 +14,9 @@ import { idSelector, isQuiz, ticksToTime, makeErrorInfo, actionWith, makeActiveI
 
   let showModal: 'abort' | 'finish' | null = null;
   let activeAnswer = 0;
-  const answers: Answer[] = questions.map((value) => ({
-    ...value,
-    currentAnswer: undefined,
+  const answers: (Omit<Answer, 'answer'> & { answer: number | undefined })[] = questions.map((question) => ({
+    ...question,
+    answer: undefined as number | undefined,
     time: 0,
   }));
 
@@ -58,7 +30,7 @@ import { idSelector, isQuiz, ticksToTime, makeErrorInfo, actionWith, makeActiveI
   const labelElement = idSelector('label');
   const answerElement = idSelector<HTMLInputElement>('answer');
   answerElement.oninput = action(() => {
-    answers[activeAnswer].currentAnswer
+    answers[activeAnswer].answer
       = answerElement.value !== ''
         ? answerElement.valueAsNumber
         : undefined;
@@ -117,17 +89,37 @@ import { idSelector, isQuiz, ticksToTime, makeErrorInfo, actionWith, makeActiveI
     }
   });
 
-  function modalConfirm() {
-    if (showModal === 'finish') {
-      window.sessionStorage.setItem('answers', JSON.stringify(answers));
-    }
+  const spinnerElement = document.querySelector('.spinner') as HTMLElement;
 
+  function modalConfirm() {
     clearTimeout(timer);
-    window.location.href = showModal === 'finish' ? '/summary' : '/';
+
+    if (showModal === 'finish') {
+      showModal = null;
+      redraw();
+      spinnerElement.classList.remove('spinner-invisible');
+      const allTime = sum(...answers.map(({ time }) => time));
+      const results = answers.map(({ id, answer, time }) => ({
+        id,
+        answer: answer ?? 0,
+        time: time / allTime,
+      }));
+      finishQuiz(quizId, results)
+        .then(({ status, message }) => {
+          if (!status) {
+            throw new Error(message);
+          }
+        })
+        .then(() => window.location.href = `/summary/${quizId}`)
+        .catch(makeErrorInfo)
+        .finally(() => spinnerElement.classList.add('spinner-invisible'));
+    } else {
+      window.location.href = '/';
+    }
   }
 
   function isQuizFinished() {
-    return Object.values(answers).every(({ currentAnswer }) => currentAnswer !== undefined);
+    return Object.values(answers).every(({ answer }) => answer !== undefined);
   }
 
   function redraw() {
@@ -136,8 +128,8 @@ import { idSelector, isQuiz, ticksToTime, makeErrorInfo, actionWith, makeActiveI
     introElement.innerText = quiz.intro;
 
     const selectedAnswer = answers[activeAnswer];
-    labelElement.innerText = `${selectedAnswer.question} = `;
-    answerElement.value = selectedAnswer.currentAnswer?.toString() ?? '';
+    labelElement.innerText = `${selectedAnswer.expression} = `;
+    answerElement.value = selectedAnswer.answer?.toString() ?? '';
     timeElement.innerText = ticksToTime(selectedAnswer.time);
     penaltyElement.innerText = `${selectedAnswer.penalty}s`;
 
@@ -155,4 +147,6 @@ import { idSelector, isQuiz, ticksToTime, makeErrorInfo, actionWith, makeActiveI
 
   redraw();
   setFocusOnInput();
-})();
+
+  spinnerElement.classList.add('spinner-invisible');
+}).catch(makeErrorInfo);

@@ -10,7 +10,8 @@ html(lang='en')
     link(rel='stylesheet' type='text/css' href='/stylesheets/reset.css')
     link(rel='stylesheet' type='text/css' href='/stylesheets/global.css')
     link(rel='stylesheet' type='text/css' href='/stylesheets/button.css')
-    script(src='scripts/base.js' defer type='module')
+    script(src='/scripts/base.js' defer type='module')
+    block meta
     block styles
     block scripts
   body
@@ -27,10 +28,13 @@ html(lang='en')
         section
           if username !== undefined
             p= 'Hello ' + username
+            include /includes/main-button.pug
             a(href='/change-password'): .button Change password
             form#logout-form(method='POST' action='/logout')
               include /includes/csrf-input
               #logout.button Logout
+            a(href='/summary'): .button Summary
           else
+            include /includes/main-button.pug
             include /includes/login-button.pug
     footer.main-footer &copy Mateusz Pyszczek 2020

@@ -1,12 +1,14 @@
-ul {
-  list-style: none;
-  padding: 0;
-  border-collapse: collapse;
+.buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-li {
-  border: 1px solid #8E9093;
-  padding: 8px;
+.results {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  grid-gap: 10px;
 }
 
 .correct {
@@ -21,13 +23,11 @@ li {
   li {
     padding: 4px;
   }
-  
   .buttons {
     display: flex;
     flex-direction: column;
     justify-content: stretch;
   }
-
   .buttons>.button {
     margin: 2px;
   }

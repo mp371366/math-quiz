@@ -1,53 +1,9 @@
-export type Question = {
-  question: string;
-  answer: number;
-  penalty: number;
-}
-
-export type Quiz = {
-  intro: string;
-  questions: Question[];
-}
-
-export type Answer = Question & {
-  currentAnswer?: number;
-  time: number;
-}
-
 export function isNumber(data: any): data is number {
   return !isNaN(+data);
 }
 
-export function isQuestion(data: any): data is Question {
-  return data
-    && data.question !== undefined
-    && typeof data.question === 'string'
-    && data.answer !== undefined
-    && typeof data.answer === 'number'
-    && data.penalty !== undefined
-    && typeof data.penalty === 'number';
-}
-
-export function isQuiz(data: any): data is Quiz {
-  return data
-    && data.intro !== undefined
-    && typeof data.intro === 'string'
-    && data.questions !== undefined
-    && Object.entries(data.questions).every(([key, value]) => {
-      return isNumber(key) && isQuestion(value);
-    });
-}
-
-export function isAnswers(data: any): data is Answer[] {
-  return data && data.every(isAnswer);
-}
-
-export function isAnswer(data: any): data is Answer {
-  return data
-    && ['number', 'undefined'].includes(typeof data.currentAnswer)
-    && data.time !== undefined
-    && typeof data.time === 'number'
-    && isQuestion(data);
+export function isString(data: any): data is string {
+  return data !== undefined && typeof data === 'string';
 }
 
 export function idSelector<T extends HTMLElement = HTMLElement>(id: string): T {
@@ -84,4 +40,33 @@ export function ticksToTime(ticks: number): string {
   const seconds = Math.floor(secs - minuts * 60);
   const dseconds = Math.floor(dsecs % 10);
   return `${minuts}:${seconds.toString().padStart(2, '0')}.${dseconds}`;
+}
+
+export function sum(...numbers: number[]): number {
+  return numbers.reduce((a, b) => a + b, 0);
+}
+
+export function arraysEqualAsSets<T>(arr1: T[], arr2: T[]): boolean {
+  if (arr1 === arr2) {
+    return true;
+  }
+
+  if (arr1 === null || arr2 === null) {
+    return false;
+  }
+
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  const a1 = arr1.concat().sort();
+  const a2 = arr2.concat().sort();
+
+  for (let i = 0; i < a1.length; ++i) {
+    if (a1[i] !== a2[i]) {
+      return false;
+    }
+  }
+
+  return true;
 }

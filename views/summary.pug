@@ -1,5 +1,8 @@
 extends base.pug
 
+block meta
+  meta(name='quiz-id' content=quizId)
+
 block styles
   link(rel='stylesheet' type='text/css' href='/stylesheets/description-list.css')
   link(rel='stylesheet' type='text/css' href='/stylesheets/summary.css')
@@ -8,12 +11,18 @@ block scripts
   script(src='/scripts/summary.js' defer type='module')
 
 block content
-  h2 Summary
-  section
-    p#overall
-    p Details
-    ul#results
-  section.buttons
-    #save-with-details.button Save result with details
-    #only-result.button Save only result
-    #no-save.button Finish without saving
+  .summary
+    h2 Summary
+    ul.buttons
+      each quiz in quizes
+        li: .button(data-id=quiz.id)= quiz.name
+    #results-container.results
+      div
+        h3#overall
+        ul#results
+      table
+        caption Top results
+        thead
+          th Username
+          th Time
+        tbody#top

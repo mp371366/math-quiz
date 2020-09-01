@@ -26,7 +26,8 @@
   border: 1px solid;
 }
 
-.button:not(.button-disabled):hover {
+.button:not(.button-disabled):hover,
+.button:not(.button-disabled).active {
   cursor: pointer;
   background-color: #3B3C3C;
 }

@@ -5,7 +5,8 @@
   ],
   "jsRules": {},
   "rules": {
-    "prefer-conditional-expression": true
+    "prefer-conditional-expression": true,
+    "no-shadowed-variable": false
   },
   "rulesDirectory": []
 }

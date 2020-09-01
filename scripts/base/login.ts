@@ -1,7 +1,6 @@
 import * as sqlite3 from 'sqlite3';
 
 export async function login(username: string, password: string): Promise<boolean> {
-  sqlite3.verbose();
   const db = new sqlite3.Database('base.db');
   return await new Promise((resolve, reject) => {
     db.all(`
@@ -11,9 +10,11 @@ export async function login(username: string, password: string): Promise<boolean
     `, [username, password], (error, rows) => {
       db.close();
 
-      if (error) reject(error);
-
-      resolve(rows.length === 1);
+      if (error) {
+        reject(error);
+      } else {
+        resolve(rows.length === 1);
+      }
     });
   });
 }
@@ -27,9 +28,13 @@ export async function changePassword(username: string, newPassword: string): Pro
       SET password = ?
       WHERE username = ?
     `, [newPassword, username], (error) => {
-      if (error) reject(error);
+      db.close();
 
-      resolve(true);
+      if (error) {
+        reject(error);
+      } else {
+        resolve(true);
+      }
     });
   });
 }

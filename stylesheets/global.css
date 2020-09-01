@@ -83,6 +83,12 @@ header.sidebar-header {
   box-sizing: border-box;
 }
 
+ul {
+  list-style: none;
+  padding: 0;
+  border-collapse: collapse;
+}
+
 @media screen and (max-width: 760px) {
   .sidebar {
     padding-top: 15px;
