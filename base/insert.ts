@@ -8,8 +8,7 @@ db.run(`
   INSERT INTO account(username, password)
   VALUES
     ('user1', 'user1'),
-    ('user2', 'user2'),
-    ('a', 'a')
+    ('user2', 'user2')
 `);
 
 db.run(`

@@ -19,6 +19,7 @@ main {
 .spinner.spinner-invisible {
   width: 0;
   height: 0;
+  visibility: hidden;
 }
 
 @media screen and (max-width: 760px) {

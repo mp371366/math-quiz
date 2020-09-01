@@ -33,8 +33,18 @@ export async function getNotStartedQuizes(username: string) {
 
 export async function getQuiz(id: number, username: string) {
   const db = new Database('base.db');
-  return await Promise.resolve()
-    .then(async () => {
+  return await all<{ end: boolean }>(db, `
+          SELECT end IS NOT NULL as end
+          FROM quiz_submit
+          WHERE username = ?
+          AND quiz = ?
+        `, [username, id])
+    .then((rows) => rows.length > 0 && rows[0].end)
+    .then(async (exists) => {
+      if (exists) {
+        throw new Error('Quiz already submited.');
+      }
+
       await run(db, `BEGIN`)
         .then(() => run(db, `
           INSERT INTO quiz_submit(username, quiz, start, end)

@@ -1,7 +1,6 @@
-import { BASE_URL } from './settings.js';
-import { getData, postData } from './utils.js';
-import * as base from '../base/quiz';
-import { Quiz, Question } from '../types';
+import { BASE_URL } from './settings';
+import { getData, postData } from './utils';
+import { Quiz, Question, Answer } from '../types';
 
 const QUIZ_URL = `${BASE_URL}/quiz`;
 
@@ -13,6 +12,6 @@ export async function getQuiz(id: number): Promise<Omit<Quiz, 'questions'> & { q
   return getData(`${QUIZ_URL}/${id}`);
 }
 
-export async function finishQuiz(id: number, answers: Parameters<typeof base.finishQuiz>[2]) {
+export async function finishQuiz(id: number, answers: Pick<Answer, 'id' | 'time' | 'answer'>[]) {
   return postData(`${QUIZ_URL}/${id}`, answers);
 }
