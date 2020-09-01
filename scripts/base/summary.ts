@@ -24,6 +24,7 @@ export async function getTop(id: number, limit: number = 5) {
       ON a.question = q.id
       JOIN quiz_submit s
       ON q.quiz = s.quiz
+      AND a.username = s.username
       WHERE q.quiz = ?
     )
     GROUP BY username
@@ -53,6 +54,7 @@ export async function getSummary(id: number, username: string) {
       ON a.question = q.id
       JOIN quiz_submit s
       ON q.quiz = s.quiz
+      AND a.username = s.username
       WHERE a.username = ?
       AND q.quiz = ?
     `, [username, id])
