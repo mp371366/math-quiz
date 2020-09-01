@@ -9,4 +9,5 @@ export interface FullAnswer {
   expression: string;
   answer: number;
   correctAnswer: number;
+  averge?: number;
 }

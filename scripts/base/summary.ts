@@ -38,6 +38,14 @@ export async function getSummary(id: number, username: string) {
   const db = new Database('base.db');
 
   return await all<FullAnswer>(db, `
+    SELECT
+      t1.question AS question,
+      t1.expression AS expression,
+      t1.correctAnswer AS correctAnswer,
+      t1.answer AS answer,
+      t1.time AS time,
+      t2.averge AS averge
+    FROM (
       SELECT
         q.id AS question,
         q.expression AS expression,
@@ -57,6 +65,30 @@ export async function getSummary(id: number, username: string) {
       AND a.username = s.username
       WHERE a.username = ?
       AND q.quiz = ?
-    `, [username, id])
+    ) t1
+    JOIN (
+      SELECT
+        t.id AS id,
+        AVG(t.time) AS averge
+      FROM (SELECT
+          q.id AS id,
+          CASE
+            WHEN q.answer != a.answer THEN NULL
+            ELSE ( strftime('%s', s.end)
+                  - strftime('%s', s.start)
+                  ) * 1000 * a.time
+          END AS time
+        FROM answer a
+        JOIN question q
+        ON a.question = q.id
+        JOIN quiz_submit s
+        ON q.quiz = s.quiz
+        AND a.username = s.username
+        WHERE q.quiz = ?
+      ) t
+      GROUP BY t.id
+    ) t2
+    ON t1.question = t2.id
+    `, [username, id, id])
     .finally(() => db.close());
 }

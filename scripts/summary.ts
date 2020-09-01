@@ -65,7 +65,9 @@ async function redraw() {
         createDT('Your answer'),
         createDD(answer.answer),
         createDT('Time'),
-        createDD(ticksToTime(answer.time))
+        createDD(ticksToTime(answer.time)),
+        createDT('Averge time'),
+        createDD(answer.averge ? ticksToTime(answer.averge) : answer.averge)
       );
       const result = document.createElement('li');
       result.append(row);
