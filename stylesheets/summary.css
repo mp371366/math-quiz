@@ -23,12 +23,18 @@
   li {
     padding: 4px;
   }
+
   .buttons {
-    display: flex;
-    flex-direction: column;
-    justify-content: stretch;
+    justify-content: space-between;
   }
+
   .buttons>.button {
     margin: 2px;
+  }
+
+  .results {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-gap: 10px;
   }
 }

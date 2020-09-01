@@ -18,6 +18,7 @@ body {
 
 header.main-header {
   display: grid;
+  align-items: center;
   grid-template-columns: 10% 80% 10%;
 }
 
@@ -94,11 +95,33 @@ ul {
     padding-top: 15px;
   }
 
+  header.main-header {
+    grid-template-columns: 15% 70% 15%;
+  }
+
   main {
     padding: 5%;
   }
   
   h2 {
     margin-bottom: 5px;
+  }
+
+  .menu-sidebar {
+    width: 100%;
+    padding-top: 15px;
+  }
+
+  .menu.menu-hide>.menu-sidebar {
+    width: 0px;
+  }
+
+  header.sidebar-header {
+    grid-template-columns: 75% 25%;
+  }
+
+  .menu-section {
+    display: flex;
+    flex-direction: column;
   }
 }

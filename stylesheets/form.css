@@ -17,6 +17,7 @@
 
 .form-item>label {
   width: 25%;
+  text-align: left;
 }
 
 input[type=number],
@@ -52,5 +53,16 @@ input[type=password]::-webkit-outer-spin-button {
 @media screen and (max-width: 760px) {
   .form {
     width: min(500px, 100%);
+  }
+
+  .form-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-item>label,
+  .form-item>input {
+    width: inherit;
+    box-sizing: border-box;
   }
 }
