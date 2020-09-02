@@ -20,8 +20,7 @@ const salt = process.env.SALT ?? '$2b$10$JFDmxYUkJh3AwALlyTTefe';
 const hash = async (password: string) => bcrypt.hash(password, salt);
 
 app.locals.basedir = `${process.cwd()}`;
-app.use('/scripts', express.static('build', { index: 'index.js' }));
-app.use('/stylesheets', express.static('stylesheets'));
+app.use(express.static('public', { index: 'index.js' }));
 app.set('view engine', 'pug');
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(secret));

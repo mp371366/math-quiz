@@ -10,7 +10,7 @@
     "build:back-end": "tsc",
     "lint": "tslint **/*.ts",
     "test": "npx mocha -r ts-node/register tests/*.ts && npm run createdb",
-    "clean": "rm -rf build/ server/",
+    "clean": "rm -rf public/scripts/ server/",
     "base:make": "npm run base:clean && npx ts-node base/init.ts",
     "base:insert": "npx ts-node base/insert.ts",
     "base:clean": "rm -f base.db",

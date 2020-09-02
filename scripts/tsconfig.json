@@ -7,7 +7,7 @@
       "DOM"
     ],
     "sourceMap": true,
-    "outDir": "../build/",
+    "outDir": "../public/scripts/",
     "rootDir": ".",
     "strict": true,
     "moduleResolution": "node",
