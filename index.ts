@@ -10,6 +10,7 @@ import { good, bad } from './scripts/api/index.js';
 import { getSummary, getTop } from './scripts/base/summary.js';
 import bcrypt from 'bcrypt';
 import connectSqlite3 from 'connect-sqlite3';
+import { Answer } from './scripts/types/index.js';
 
 dotenv.config();
 
@@ -40,6 +41,12 @@ app.use(session({
 }));
 app.use(express.json());
 
+app.use((request, response, next) => {
+  response.locals.username = request.session?.username;
+  response.locals.csrfToken = request.csrfToken();
+  next();
+});
+
 const notAuthPaths = ['/', '/login'];
 
 app.use((request, response, next) => {
@@ -48,62 +55,42 @@ app.use((request, response, next) => {
   } else {
     response.render('login', {
       error: 'Login required.',
-      csrfToken: request.csrfToken(),
       next: request.path,
     });
   }
 });
 
 app.get('/', (request, response) => {
-  const username = request.session?.username as string;
-
-  response.render('index', {
-    username,
-    csrfToken: request.csrfToken(),
-  });
+  response.render('index');
 });
 
 app.get('/quiz/:quizId', (request, response) => {
-  const username = request.session?.username as string;
-
   response.render('quiz', {
-    username,
-    csrfToken: request.csrfToken(),
     quizId: parseInt(request.params.quizId, 10),
   });
 });
 
 app.get('/summary', async (request, response) => {
-  const username = request.session?.username as string;
-  const quizes = await getFinishedQuizes(username);
+  const quizes = await getFinishedQuizes(response.locals.username);
 
   response.render('summary', {
-    username,
-    csrfToken: request.csrfToken(),
     quizes,
   });
 });
 
 app.get('/summary/:quizId', async (request, response) => {
-  const username = request.session?.username as string;
   const quizId = parseInt(request.params.quizId, 10);
-  const quizes = await getFinishedQuizes(username);
+  const quizes = await getFinishedQuizes(response.locals.username);
 
   response.render('summary', {
-    username,
-    csrfToken: request.csrfToken(),
     quizId,
     quizes,
   });
 });
 
 app.get('/login', (request, response) => {
-  const username = request.session?.username as string;
-
   response.render('login', {
-    username,
-    csrfToken: request.csrfToken(),
-    next: '/',
+    next: '/'
   });
 });
 
@@ -119,35 +106,24 @@ app.post('/login', async (request, response) => {
   } else {
     response.render('login', {
       error: 'Bad login.',
-      csrfToken: request.csrfToken(),
       next,
-    })
+    });
   }
 });
 
 app.get('/change-password', (request, response) => {
-  const username = request.session?.username as string;
-
-  response.render('change-password', {
-    username,
-    csrfToken: request.csrfToken(),
-  });
+  response.render('change-password');
 });
 
 app.post('/change-password', async (request, response) => {
-  if (request.session?.username === undefined) {
-    return;
-  }
-
-  const username = request.session?.username as string;
   const newPassword = request.body['new-password'];
   const repeatPassword = request.body['password-repeat'];
+  const username = response.locals.username;
 
   if (newPassword !== repeatPassword
     || !await changePassword(username, await hash(newPassword))) {
     response.render('change-password', {
-      error: 'Passwords do not match each other.',
-      csrfToken: request.csrfToken(),
+      error: 'Passwords do not match each other.'
     });
   } else {
     // tslint:disable-next-line:no-console
@@ -161,33 +137,24 @@ app.post('/logout', (request, response) => {
     request.session.username = undefined;
   }
 
+  // TODO else
+
   response.redirect('/');
 });
 
 app.get('/api/quiz', async (request, response) => {
-  if (request.session?.username === undefined) {
-    response.json(bad('Login required'));
-
-    return;
-  }
-
-  const username = request.session?.username as string;
+  const username = response.locals.username;
 
   response.json(
     await getNotStartedQuizes(username)
-      .catch(((error: any) => error))
+      .catch(((error) => error))
   );
 });
 
 app.get('/api/quiz/:quizId', async (request, response) => {
-  if (request.session?.username === undefined) {
-    response.json(bad('Login required'));
-
-    return;
-  }
-
-  const username = request.session?.username as string;
+  const username = response.locals.username;
   const quizId = parseInt(request.params.quizId, 10);
+
   response.json(
     await getQuiz(quizId, username)
       .catch(((error) => error))
@@ -195,15 +162,9 @@ app.get('/api/quiz/:quizId', async (request, response) => {
 });
 
 app.post('/api/quiz/:quizId', async (request, response) => {
-  if (request.session?.username === undefined) {
-    response.json(bad('Login required'));
-
-    return;
-  }
-
-  const username = request.session?.username as string;
+  const username = response.locals.username;
   const quizId = parseInt(request.params.quizId, 10);
-  const answers: Parameters<typeof finishQuiz>[2] = request.body;
+  const answers: Pick<Answer, 'id' | 'time' | 'answer'>[] = request.body;
   const sumOfTime = sum(...answers.map(({ time }) => time));
   const EPS = 10e-3;
 
@@ -217,13 +178,7 @@ app.post('/api/quiz/:quizId', async (request, response) => {
 });
 
 app.get('/api/summary/:quizId', async (request, response) => {
-  if (request.session?.username === undefined) {
-    response.json(bad('Login required'));
-
-    return;
-  }
-
-  const username = request.session?.username as string;
+  const username = response.locals.username;
   const quizId = parseInt(request.params.quizId, 10);
 
   response.json(
@@ -234,6 +189,7 @@ app.get('/api/summary/:quizId', async (request, response) => {
 
 app.get('/api/summary/top/:quizId', async (request, response) => {
   const quizId = parseInt(request.params.quizId, 10);
+
   response.json(
     await getTop(quizId)
       .catch(((error) => error))
