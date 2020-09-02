@@ -22,7 +22,7 @@ const hash = async (password: string) => bcrypt.hash(password, salt);
 
 app.locals.hash = hash;
 app.locals.basedir = `${process.cwd()}`;
-app.use(express.static('public', { index: 'index.js' }));
+app.use(express.static('public'));
 app.set('view engine', 'pug');
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(secret));
