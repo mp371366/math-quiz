@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getQuiz, finishQuiz, getNotStartedQuizes } from '../base/quiz.js';
 import { sum } from '../../scripts/utils.js';
-import { good, bad } from '../../scripts/api/utils.js';
+import { good, bad } from '../../scripts/api.js';
 import Answer from '../../scripts/types/answer.js';
 
 const quizApiRouter = Router();

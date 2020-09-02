@@ -1,7 +1,7 @@
-import { FullAnswer, TopResult } from './types/summary';
+import { FullAnswer, TopResult } from './types/summary.js';
 import { idSelector, makeErrorInfo, ticksToTime, actionWith, sum } from './utils.js';
-import { getSummary } from './api/summary.js';
-import { getTop } from './api/summary.js';
+import { SUMMARY_URL } from './settings.js';
+import { getData } from './api.js';
 
 let lastQuizId = undefined as number | undefined;
 const idElementContent = document?.querySelector('meta[name="quiz-id"]')?.getAttribute('content');
@@ -40,11 +40,11 @@ async function redraw() {
     const newButton = document.querySelector(`.button[data-id="${lastQuizId}"]`);
     newButton?.classList.add('active');
 
-    summary = await getSummary(quizId).catch(makeErrorInfo);
+    summary = await getData<FullAnswer[]>(`${SUMMARY_URL}/${quizId}`).catch(makeErrorInfo);
     if (!summary) {
       return;
     }
-    tops = await getTop(quizId).catch(makeErrorInfo);
+    tops = await getData<TopResult[]>(`${SUMMARY_URL}/top/${quizId}`).catch(makeErrorInfo);
     if (!tops) {
       return;
     }

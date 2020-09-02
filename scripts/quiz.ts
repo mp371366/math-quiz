@@ -1,6 +1,17 @@
 import { idSelector, ticksToTime, makeErrorInfo, actionWith, makeActiveIfWith, sum } from './utils.js';
-import { getQuiz, finishQuiz } from './api/quiz.js';
+import { QUIZ_URL } from './settings.js';
+import { getData, postData } from './api.js';
+import Quiz from './types/quiz.js';
+import Question from './types/question.js';
 import Answer from './types/answer.js';
+
+async function getQuiz(id: number): Promise<Omit<Quiz, 'questions'> & { questions: Omit<Question, 'answer'>[] }> {
+  return getData(`${QUIZ_URL}/${id}`);
+}
+
+async function finishQuiz(id: number, answers: Pick<Answer, 'id' | 'time' | 'answer'>[]) {
+  return postData(`${QUIZ_URL}/${id}`, answers);
+}
 
 const quizId = parseInt(document?.querySelector('meta[name="quiz-id"]')?.getAttribute('content') ?? '', 10);
 getQuiz(quizId).then((quiz) => {
