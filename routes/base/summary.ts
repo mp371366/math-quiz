@@ -1,6 +1,5 @@
-import { FullAnswer, TopResult } from './../types/summary';
-import * as sqlite3 from 'sqlite3';
-const { Database } = sqlite3;
+import { FullAnswer, TopResult } from '../../scripts/types/summary';
+import { Database } from 'sqlite3';
 import { all } from './utils.js';
 
 export async function getTop(id: number, limit: number = 5) {

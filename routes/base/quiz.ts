@@ -1,8 +1,9 @@
-import * as sqlite3 from 'sqlite3';
-const { Database } = sqlite3;
-import { Quiz, Question, Answer } from '../types';
+import { Database } from 'sqlite3';
+import Quiz from '../../scripts/types/quiz.js';
+import Question from '../../scripts/types/question.js';
+import Answer from '../../scripts/types/answer.js';
 import { get, all, run } from './utils.js';
-import { arraysEqualAsSets } from '../utils.js';
+import { arraysEqualAsSets } from '../../scripts/utils.js';
 
 export async function getFinishedQuizes(username: string) {
   const db = new Database('base.db');
@@ -80,7 +81,6 @@ export async function getQuiz(id: number, username: string) {
 export async function finishQuiz(id: number, username: string, answers: Pick<Answer, 'id' | 'time' | 'answer'>[]) {
   const db = new Database('base.db');
   const answersIds = answers.map(({ id }) => id);
-  sqlite3.verbose();
 
   return await all<{ id: number }>(db, `
         SELECT question AS id

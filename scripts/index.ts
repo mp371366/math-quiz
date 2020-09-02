@@ -1,5 +1,5 @@
 import { idSelector } from './utils.js';
-import { getAllQuizes } from './api';
+import { getAllQuizes } from './api/quiz.js';
 
 const quizesElement = idSelector('quizes');
 

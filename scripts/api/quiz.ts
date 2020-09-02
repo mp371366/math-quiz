@@ -1,6 +1,8 @@
 import { BASE_URL } from './settings.js';
 import { getData, postData } from './utils.js';
-import { Quiz, Question, Answer } from '../types';
+import Quiz from '../types/quiz.js';
+import Question from '../types/question.js';
+import Answer from '../types/answer.js';
 
 const QUIZ_URL = `${BASE_URL}/quiz`;
 

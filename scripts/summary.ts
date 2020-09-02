@@ -1,6 +1,6 @@
 import { FullAnswer, TopResult } from './types/summary';
 import { idSelector, makeErrorInfo, ticksToTime, actionWith, sum } from './utils.js';
-import { getSummary } from './api/index.js';
+import { getSummary } from './api/summary.js';
 import { getTop } from './api/summary.js';
 
 let lastQuizId = undefined as number | undefined;

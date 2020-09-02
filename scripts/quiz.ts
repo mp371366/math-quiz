@@ -1,6 +1,6 @@
 import { idSelector, ticksToTime, makeErrorInfo, actionWith, makeActiveIfWith, sum } from './utils.js';
-import { getQuiz, finishQuiz } from './api';
-import { Answer } from './types';
+import { getQuiz, finishQuiz } from './api/quiz.js';
+import Answer from './types/answer.js';
 
 const quizId = parseInt(document?.querySelector('meta[name="quiz-id"]')?.getAttribute('content') ?? '', 10);
 getQuiz(quizId).then((quiz) => {
