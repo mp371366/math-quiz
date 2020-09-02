@@ -23,6 +23,7 @@
   "author": "mp371366",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "cookie-parser": "^1.4.5",
     "csurf": "^1.11.0",
     "dotenv": "^8.2.0",
@@ -32,6 +33,7 @@
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/chai": "^4.2.12",
     "@types/cookie-parser": "^1.4.2",
     "@types/csurf": "^1.9.36",

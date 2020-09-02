@@ -8,12 +8,15 @@ import dotenv from 'dotenv';
 import { sum } from './scripts/utils.js';
 import { good, bad } from './scripts/api/index.js';
 import { getSummary, getTop } from './scripts/base/summary.js';
+import bcrypt from 'bcrypt';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT ?? 3000;
 const secret = process.env.SECRET ?? 'math-quiz';
+const salt = process.env.SALT ?? '$2b$10$JFDmxYUkJh3AwALlyTTefe';
+const hash = async (password: string) => bcrypt.hash(password, salt);
 
 app.locals.basedir = `${process.cwd()}`;
 app.use('/scripts', express.static('build', { index: 'index.js' }));
@@ -102,7 +105,7 @@ app.get('/login', (request, response) => {
 
 app.post('/login', async (request, response) => {
   const username = request.body.username;
-  const password = request.body.password;
+  const password = await hash(request.body.password);
   const next = request.body.next;
   const result = await login(username, password);
 
@@ -136,7 +139,8 @@ app.post('/change-password', async (request, response) => {
   const newPassword = request.body['new-password'];
   const repeatPassword = request.body['password-repeat'];
 
-  if (newPassword !== repeatPassword || !await changePassword(username, newPassword)) {
+  if (newPassword !== repeatPassword
+    || !await changePassword(username, await hash(newPassword))) {
     response.render('change-password', {
       error: 'Passwords do not match each other.',
       csrfToken: request.csrfToken(),
