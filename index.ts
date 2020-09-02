@@ -9,6 +9,7 @@ import { sum } from './scripts/utils.js';
 import { good, bad } from './scripts/api/index.js';
 import { getSummary, getTop } from './scripts/base/summary.js';
 import bcrypt from 'bcrypt';
+import connectSqlite3 from 'connect-sqlite3';
 
 dotenv.config();
 
@@ -26,6 +27,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(secret));
 app.use(csrf({ cookie: true }));
 app.use(session({
+  store: new connectSqlite3(session)({
+    table: 'session',
+    db: 'base.db',
+  }),
   secret,
   resave: false,
   saveUninitialized: true,
