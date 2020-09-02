@@ -29,8 +29,8 @@ html(lang='en')
           if username !== undefined
             p= 'Hello ' + username
             include /includes/main-button.pug
-            a(href='/login/change-password'): .button Change password
-            form#logout-form(method='POST' action='/login/logout')
+            a(href='/user/change-password'): .button Change password
+            form#logout-form(method='POST' action='/user/logout')
               include /includes/csrf-input
               #logout.button Logout
             a(href='/summary'): .button Summary

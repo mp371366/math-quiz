@@ -48,13 +48,13 @@ app.use((req, res, next) => {
   next();
 });
 
-const notAuthPaths = ['/', '/login'];
+const notAuthPaths = ['/', '/user'];
 
 app.use((req, res, next) => {
   if (notAuthPaths.includes(req.path) || req.session?.username !== undefined) {
     next();
   } else {
-    res.render('login', {
+    res.render('user/login', {
       error: 'Login required.',
       next: req.path,
     });
@@ -62,7 +62,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/', indexRouter);
-app.use('/login', userRouter);
+app.use('/user', userRouter);
 app.use('/quiz', quizRouter);
 app.use('/summary', summaryRouter);
 app.use('/api/quiz', quizApiRouter);

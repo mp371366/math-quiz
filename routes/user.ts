@@ -4,7 +4,7 @@ import { login, changePassword } from './base/user.js';
 const userRouter = Router();
 
 userRouter.get('/', (req, res) => {
-  res.render('login', {
+  res.render('user/login', {
     next: '/'
   });
 });
@@ -19,7 +19,7 @@ userRouter.post('/', async (req, res) => {
     req.session.username = username;
     res.redirect(next);
   } else {
-    res.render('login', {
+    res.render('user/login', {
       error: 'Bad login.',
       next,
     });
@@ -27,7 +27,7 @@ userRouter.post('/', async (req, res) => {
 });
 
 userRouter.get('/change-password', (req, res) => {
-  res.render('change-password');
+  res.render('user/change-password');
 });
 
 userRouter.post('/change-password', async (req, res) => {
@@ -37,7 +37,7 @@ userRouter.post('/change-password', async (req, res) => {
 
   if (newPassword !== repeatPassword
     || !await changePassword(username, await req.app.locals.hash(newPassword))) {
-    res.render('change-password', {
+    res.render('user/change-password', {
       error: 'Passwords do not match each other.'
     });
   } else {
