@@ -41,7 +41,7 @@ app.use(session({
 }));
 app.use(express.json());
 
-const notAuthPaths = ['/', '/login', '/api/quiz'];
+const notAuthPaths = ['/', '/login'];
 
 app.use((request, response, next) => {
   if (notAuthPaths.includes(request.path) || request.session?.username !== undefined) {
