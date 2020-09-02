@@ -1,8 +1,6 @@
-import * as sqlite3 from 'sqlite3';
+import { Database } from 'sqlite3';
 
-sqlite3.verbose();
-
-const db = new sqlite3.Database('base.db');
+const db = new Database('base.db');
 
 db.run(`
   CREATE TABLE account(

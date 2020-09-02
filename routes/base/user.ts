@@ -1,7 +1,7 @@
-import * as sqlite3 from 'sqlite3';
+import { Database } from 'sqlite3';
 
 export async function login(username: string, password: string): Promise<boolean> {
-  const db = new sqlite3.Database('base.db');
+  const db = new Database('base.db');
   return await new Promise((resolve, reject) => {
     db.all(`
       SELECT 1
@@ -20,8 +20,7 @@ export async function login(username: string, password: string): Promise<boolean
 }
 
 export async function changePassword(username: string, newPassword: string): Promise<boolean> {
-  sqlite3.verbose();
-  const db = new sqlite3.Database('base.db');
+  const db = new Database('base.db');
   return await new Promise((resolve, reject) => {
     db.run(`
       UPDATE account
