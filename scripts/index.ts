@@ -1,14 +1,15 @@
-import { idSelector } from './utils.js';
+import { idSelector, rethrow, tryExec, makeErrorInfo } from './dom.js';
 import { QUIZ_URL } from './settings.js';
 import { getData } from './api.js';
-import Quiz from './types/quiz.js';
+import { QuizBasicInfo } from './types/quiz.js';
 
 const quizesElement = idSelector('quizes');
 
-(async () => {
+tryExec(async () => {
   if (quizesElement) {
     quizesElement.innerText = 'Please wait ...';
-    const quizes = await getData<Pick<Quiz, "id" | "name">[]>(QUIZ_URL);
+    const quizes = await getData<QuizBasicInfo[]>(QUIZ_URL)
+      .catch(rethrow);
     quizesElement.innerText = '';
     quizesElement.append(...quizes.map(({ id, name }) => {
       const buttonElemet = document.createElement('div');
@@ -24,4 +25,4 @@ const quizesElement = idSelector('quizes');
       return quizElement;
     }));
   }
-})();
+}).catch(makeErrorInfo);

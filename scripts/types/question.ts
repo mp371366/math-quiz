@@ -1,18 +1,26 @@
-import { isNumber, isString } from '../utils.js';
+import { isNumber, isString } from './utils.js';
 
-export default interface Question {
+export interface QuestionInfo {
   id: number
   quiz: number;
   expression: string;
-  answer: number;
   penalty: number;
 }
 
-export function isQuestion(data: any): data is Question {
+export function isQuestionInfo(data: any): data is QuestionInfo {
   return data
     && isNumber(data.id)
     && isNumber(data.quiz)
     && isString(data.expression)
-    && isNumber(data.answer)
     && isNumber(data.penalty);
+}
+
+export default interface Question extends QuestionInfo {
+  answer: number;
+}
+
+export function isQuestion(data: any): data is Question {
+  return data
+    && isNumber(data.answer)
+    && isQuestionInfo(data);
 }

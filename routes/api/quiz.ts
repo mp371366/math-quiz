@@ -1,44 +1,45 @@
 import { Router } from 'express';
-import { getQuiz, finishQuiz, getNotStartedQuizes } from '../base/quiz.js';
-import { sum } from '../../scripts/utils.js';
-import { good, bad } from '../../scripts/api.js';
-import Answer from '../../scripts/types/answer.js';
+import { startQuiz, finishQuiz, getNotStartedQuizes, getStartedQuiz } from '../base/quiz.js';
+import { wrapResponse, bad } from '../../scripts/api.js';
+import { isAnswerInfo } from '../../scripts/types/answer.js';
+import { isArray } from '../../scripts/types/utils.js';
 
 const quizApiRouter = Router();
 
 quizApiRouter.get('/', async (req, res) => {
   const username = res.locals.username;
-
-  res.json(
-    await getNotStartedQuizes(username)
-      .catch(((error) => error))
-  );
+  const result = getNotStartedQuizes(username);
+  const response = await wrapResponse(result);
+  res.json(response);
 });
 
-quizApiRouter.get('/:quizId', async (req, res) => {
+quizApiRouter.get('/start', async (req, res) => {
   const username = res.locals.username;
-  const quizId = parseInt(req.params.quizId, 10);
-
-  res.json(
-    await getQuiz(quizId, username)
-      .catch(((error) => error))
-  );
+  const result = getStartedQuiz(username);
+  const response = await wrapResponse(result);
+  res.json(response);
 });
 
-quizApiRouter.post('/:quizId', async (req, res) => {
+quizApiRouter.post('/start/:quizId', async (req, res) => {
   const username = res.locals.username;
   const quizId = parseInt(req.params.quizId, 10);
-  const answers: Pick<Answer, 'id' | 'time' | 'answer'>[] = req.body;
-  const sumOfTime = sum(...answers.map(({ time }) => time));
-  const EPS = 10e-3;
+  const result = startQuiz(quizId, username);
+  const response = await wrapResponse(result);
+  res.json(response);
+});
 
-  if (Math.abs(sumOfTime - 1) > EPS) {
-    res.json(bad('The percentages do not add up to 100'));
-  } else {
-    finishQuiz(quizId, username, answers)
-      .then(() => res.json(good()))
-      .catch((error) => res.json(bad(error.toString())));
+quizApiRouter.post('/finish', async (req, res) => {
+  const username = res.locals.username;
+  const answers = req.body;
+
+  if (!isArray(answers, isAnswerInfo)) {
+    res.json(bad<void>(new Error('Invalid type of body.')));
+    return;
   }
+
+  const result = finishQuiz(username, answers);
+  const response = await wrapResponse(result);
+  res.json(response);
 });
 
 export default quizApiRouter;

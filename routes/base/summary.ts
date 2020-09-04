@@ -11,23 +11,34 @@ export async function getTop(id: number, limit: number = 5) {
       SUM(time) AS time
     FROM (
       SELECT
-        a.username AS username,
-        (strftime('%s', s.end) - strftime('%s', s.start)
+        answer.username,
+        (
+          strftime('%s', quiz_submit.end)
+        - strftime('%s', quiz_submit.start)
         + (CASE
-            WHEN q.answer = a.answer THEN 0
-            ELSE q.penalty
+            WHEN question.answer = answer.answer THEN 0
+            ELSE question.penalty
           END)
-        ) * 1000 * a.time AS time
-      FROM answer a
-      JOIN question q
-      ON a.question = q.id
-      JOIN quiz_submit s
-      ON q.quiz = s.quiz
-      AND a.username = s.username
-      WHERE q.quiz = ?
+        ) * 1000 * answer.time AS time
+      FROM
+        answer
+      JOIN
+        question
+      ON
+        answer.question = question.id
+      JOIN
+        quiz_submit
+      ON
+        question.quiz = quiz_submit.quiz
+      AND
+        answer.username = quiz_submit.username
+      WHERE
+        question.quiz = ?
     )
-    GROUP BY username
-    ORDER BY time ASC
+    GROUP BY
+      username
+    ORDER BY
+      time ASC
     LIMIT ?
   `, [id, limit])
     .finally(() => db.close());
@@ -38,56 +49,75 @@ export async function getSummary(id: number, username: string) {
 
   return await all<FullAnswer>(db, `
     SELECT
-      t1.question AS question,
-      t1.expression AS expression,
-      t1.correctAnswer AS correctAnswer,
-      t1.answer AS answer,
-      t1.time AS time,
-      t2.averge AS averge
+      question,
+      expression,
+      correctAnswer,
+      answer,
+      time,
+      averge
     FROM (
       SELECT
-        q.id AS question,
-        q.expression AS expression,
-        q.answer AS correctAnswer,
-        a.answer AS answer,
-        (strftime('%s', s.end) - strftime('%s', s.start)
+        question.id AS question,
+        question.answer AS correctAnswer,
+        expression,
+        answer.answer AS answer,
+        (
+          strftime('%s', quiz_submit.end)
+        - strftime('%s', quiz_submit.start)
         + (CASE
-            WHEN q.answer = a.answer THEN 0
-            ELSE q.penalty
+            WHEN question.answer = answer.answer THEN 0
+            ELSE question.penalty
           END)
-        ) * 1000 * a.time AS time
-      FROM answer a
-      JOIN question q
-      ON a.question = q.id
-      JOIN quiz_submit s
-      ON q.quiz = s.quiz
-      AND a.username = s.username
-      WHERE a.username = ?
-      AND q.quiz = ?
-    ) t1
+        ) * 1000 * answer.time AS time
+      FROM
+        answer
+      JOIN
+        question
+      ON
+        answer.question = question.id
+      JOIN
+        quiz_submit
+      ON
+        question.quiz = quiz_submit.quiz
+      AND
+        answer.username = quiz_submit.username
+      WHERE
+        answer.username = ?
+      AND
+        question.quiz = ?
+    )
     JOIN (
       SELECT
-        t.id AS id,
-        AVG(t.time) AS averge
+        id,
+        AVG(time) AS averge
       FROM (SELECT
-          q.id AS id,
+          question.id,
           CASE
-            WHEN q.answer != a.answer THEN NULL
-            ELSE ( strftime('%s', s.end)
-                  - strftime('%s', s.start)
-                  ) * 1000 * a.time
+            WHEN question.answer != answer.answer THEN NULL
+            ELSE ( strftime('%s', quiz_submit.end)
+                 - strftime('%s', quiz_submit.start)
+                 ) * 1000 * answer.time
           END AS time
-        FROM answer a
-        JOIN question q
-        ON a.question = q.id
-        JOIN quiz_submit s
-        ON q.quiz = s.quiz
-        AND a.username = s.username
-        WHERE q.quiz = ?
-      ) t
-      GROUP BY t.id
-    ) t2
-    ON t1.question = t2.id
+        FROM
+          answer
+        JOIN
+          question
+        ON
+          answer.question = question.id
+        JOIN
+          quiz_submit
+        ON
+          question.quiz = quiz_submit.quiz
+        AND
+          answer.username = quiz_submit.username
+        WHERE
+          question.quiz = ?
+      )
+      GROUP BY
+        id
+    )
+    ON
+      question = id
     `, [username, id, id])
     .finally(() => db.close());
 }

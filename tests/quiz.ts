@@ -1,7 +1,6 @@
 import { driver, until } from 'mocha-webdriver';
 import { login, BASE_URL } from './utils';
 import { expect } from 'chai';
-import { postData } from '../scripts/api/utils';
 
 describe('Quiz', () => {
   const id = 1;
@@ -25,12 +24,5 @@ describe('Quiz', () => {
     await driver.find('#confirm').doClick();
     await getQuiz();
     expect((await driver.findAll('#answer')).length).to.equal(0);
-    const answers = [
-      { id, time: 1, answer: 1 },
-      { id, time: 1, answer: 1 },
-    ];
-    expect(await postData(`${BASE_URL}/api/quiz/${id}`, answers)
-      .then(({ status }) => status)
-      .catch(() => false)).to.be.false;
   });
 });

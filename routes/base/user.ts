@@ -1,39 +1,33 @@
 import { Database } from 'sqlite3';
+import { all, run } from './utils.js';
 
-export async function login(username: string, password: string): Promise<boolean> {
+export async function login(username: string, password: string) {
   const db = new Database('base.db');
-  return await new Promise((resolve, reject) => {
-    db.all(`
-      SELECT 1
-      FROM account
-      WHERE username = ? AND password = ?
-    `, [username, password], (error, rows) => {
-      db.close();
 
-      if (error) {
-        reject(error);
-      } else {
-        resolve(rows.length === 1);
-      }
-    });
-  });
+  return all<{ username: string }>(db, `
+      SELECT
+        username
+      FROM
+        account
+      WHERE
+        username = ?
+      AND
+        password = ?
+  `, [username, password])
+    .then((rows) => rows.length === 1)
+    .finally(() => db.close());
 }
 
-export async function changePassword(username: string, newPassword: string): Promise<boolean> {
+export async function changePassword(username: string, newPassword: string) {
   const db = new Database('base.db');
-  return await new Promise((resolve, reject) => {
-    db.run(`
-      UPDATE account
-      SET password = ?
-      WHERE username = ?
-    `, [newPassword, username], (error) => {
-      db.close();
 
-      if (error) {
-        reject(error);
-      } else {
-        resolve(true);
-      }
-    });
-  });
+  return run(db, `
+      UPDATE
+        account
+      SET
+        password = ?
+      WHERE
+        username = ?
+    `, [newPassword, username])
+    .finally(() => db.close());
 }

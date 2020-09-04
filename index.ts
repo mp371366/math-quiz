@@ -9,8 +9,7 @@ import indexRouter from './routes/index';
 import userRouter from './routes/user';
 import quizRouter from './routes/quiz';
 import summaryRouter from './routes/summary';
-import summaryApiRouter from './routes/api/summary';
-import quizApiRouter from './routes/api/quiz';
+import apiRouter from './routes/api/api';
 
 dotenv.config();
 
@@ -22,6 +21,7 @@ const hash = async (password: string) => bcrypt.hash(password, salt);
 
 app.locals.hash = hash;
 app.locals.basedir = `${process.cwd()}`;
+
 app.use(express.static('public'));
 app.set('view engine', 'pug');
 app.use(express.urlencoded({ extended: true }));
@@ -65,8 +65,7 @@ app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/quiz', quizRouter);
 app.use('/summary', summaryRouter);
-app.use('/api/quiz', quizApiRouter);
-app.use('/api/summary', summaryApiRouter);
+app.use('/api', apiRouter);
 
 app.listen(port, () => {
   // tslint:disable-next-line:no-console

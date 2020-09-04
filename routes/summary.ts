@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getFinishedQuizes } from './base/quiz.js';
+import { getFinishedQuizes } from './base/quiz';
 
 const summaryRouter = Router();
 

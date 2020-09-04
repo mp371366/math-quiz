@@ -11,9 +11,10 @@ userRouter.get('/', (req, res) => {
 
 userRouter.post('/', async (req, res) => {
   const username = req.body.username;
-  const password = await req.app.locals.hash(req.body.password);
+  const password = req.body.password;
   const next = req.body.next;
-  const result = await login(username, password);
+  const passwordHash = await req.app.locals.hash(password);
+  const result = await login(username, passwordHash);
 
   if (result && req.session) {
     req.session.username = username;
@@ -31,19 +32,28 @@ userRouter.get('/change-password', (req, res) => {
 });
 
 userRouter.post('/change-password', async (req, res) => {
-  const newPassword = req.body['new-password'];
-  const repeatPassword = req.body['password-repeat'];
-  const username = res.locals.username;
+  try {
+    const newPassword = req.body['new-password'];
+    const repeatPassword = req.body['password-repeat'];
+    const username = res.locals.username;
+    const passwordHash = await req.app.locals.hash(newPassword);
 
-  if (newPassword !== repeatPassword
-    || !await changePassword(username, await req.app.locals.hash(newPassword))) {
+    if (newPassword !== repeatPassword) {
+      throw new Error('Passwords do not match each other.');
+    } else if (!await changePassword(username, passwordHash)) {
+      throw new Error('Unable to change password.');
+    } else {
+      req.session?.destroy((error) => {
+        if (error) {
+          throw error;
+        }
+      });
+      res.redirect('/');
+    }
+  } catch (error) {
     res.render('user/change-password', {
-      error: 'Passwords do not match each other.'
+      error: error.message
     });
-  } else {
-    // tslint:disable-next-line:no-console
-    req.session?.destroy(console.log);
-    res.redirect('/');
   }
 });
 
@@ -51,8 +61,6 @@ userRouter.post('/logout', (req, res) => {
   if (req.session) {
     req.session.username = undefined;
   }
-
-  // TODO else
 
   res.redirect('/');
 });

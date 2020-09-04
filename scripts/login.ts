@@ -1,4 +1,4 @@
-import { idSelector } from './utils.js';
+import { idSelector } from './dom.js';
 
 (() => {
   const loginButton = idSelector('login-button');

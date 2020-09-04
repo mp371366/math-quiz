@@ -1,6 +1,6 @@
 import { Database } from 'sqlite3';
 
-export async function get<T>(db: Database, sql: string, params?: any): Promise<T> {
+export async function get<T>(db: Database, sql: string, params?: any): Promise<T | undefined> {
   return await new Promise((resolve, reject) => {
     db.get(sql, params, (error, row) => {
       if (error) {

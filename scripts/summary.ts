@@ -1,5 +1,7 @@
 import { FullAnswer, TopResult } from './types/summary.js';
-import { idSelector, makeErrorInfo, ticksToTime, actionWith, sum } from './utils.js';
+import { idSelector, makeErrorInfo, actionWith, rethrow } from './dom.js';
+import { ticksToTime } from './time.js';
+import { sum } from './utils.js';
 import { SUMMARY_URL } from './settings.js';
 import { getData } from './api.js';
 
@@ -40,14 +42,8 @@ async function redraw() {
     const newButton = document.querySelector(`.button[data-id="${lastQuizId}"]`);
     newButton?.classList.add('active');
 
-    summary = await getData<FullAnswer[]>(`${SUMMARY_URL}/${quizId}`).catch(makeErrorInfo);
-    if (!summary) {
-      return;
-    }
-    tops = await getData<TopResult[]>(`${SUMMARY_URL}/top/${quizId}`).catch(makeErrorInfo);
-    if (!tops) {
-      return;
-    }
+    summary = await getData<FullAnswer[]>(`${SUMMARY_URL}/${quizId}`).catch(rethrow);
+    tops = await getData<TopResult[]>(`${SUMMARY_URL}/top/${quizId}`).catch(rethrow);
 
     resultsElement.innerHTML = '';
     resultsElement.append(...summary.map((answer, idx) => {
@@ -75,7 +71,7 @@ async function redraw() {
       return result;
     }));
 
-    const resultTicks = sum(...summary.map(({ time }) => time));
+    const resultTicks = sum(summary.map(({ time }) => time));
     overallElement.innerText = `Your result is ${ticksToTime(resultTicks)}.`;
 
     topElement.innerHTML = '';
